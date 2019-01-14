@@ -279,6 +279,7 @@ function drawScene(gl, programInfo, buffers) {
 		const height = Math.floor(H / 10);
 		// Upload the image into the texture.
 		let temps = getNewTemperatures(width, height);
+
 		//gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8UI, W, H, 0, gl.R8UI, gl.UNSIGNED_BYTE, );
 		//console.log(Uint8Array.from(temps));
 		const level = 0;
@@ -288,6 +289,7 @@ function drawScene(gl, programInfo, buffers) {
 		const format = gl.RED;
 		const type = gl.UNSIGNED_BYTE;
 		const data = Uint8Array.from(temps);
+		gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
 		gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border,
               format, type, data);
 	}
@@ -403,28 +405,13 @@ function drawScene(gl, programInfo, buffers) {
 				  new Float32Array(texs),
 				  gl.STATIC_DRAW);
 
+	console.log(W);
+	console.log(H);
 
-	const tempBuffer = gl.createBuffer();
-  
-	gl.bindBuffer(gl.ARRAY_BUFFER, tempBuffer);
-  
-	// Now create an array of positions for the square.
-  
-	const temps = Array(W * H).fill(Math.floor(Math.random() * 255));
-	console.log(temps);
-  
-	// Now pass the list of positions into WebGL to build the
-	// shape. We do this by creating a Float32Array from the
-	// JavaScript array, then use it to fill the current buffer.
-  
-	gl.bufferData(gl.ARRAY_BUFFER,
-				  new Float32Array(temps),
-				  gl.STATIC_DRAW);
   
 	return {
 	  position: positionBuffer,
 	  tex: texBuffer,
-	  temperature: tempBuffer,
 	};
   }
 
